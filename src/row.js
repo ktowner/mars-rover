@@ -1,18 +1,18 @@
-var cell = requires('./cell');
+var cell = require('./cell');
 
-function row(parentGrid) {
-    this.grid = parentGrid;
+function Row(parentGrid) {
+    this.parentGrid = parentGrid;
     this.cells = [];
-
-    this.getIndex = function() {
-        return this.grid.rows.indexOf(this);
-    };
-
-    this.addCell = function() {
-        var c = new cell(this);
-        this.cells.push(c);
-        return c;
-    };
 }
 
-module.exports = row;
+Row.prototype.getIndex = function() {
+    return this.parentGrid.rows.indexOf(this);
+};
+
+Row.prototype.addCell = function() {
+    var c = new cell(this);
+    this.cells.push(c);
+    return c;
+};
+
+module.exports = Row;

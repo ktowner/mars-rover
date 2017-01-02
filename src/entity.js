@@ -1,94 +1,55 @@
+var util = require("./util");
+
 var directions = ["N","E","S","W"];
 var facings = ["r","l"];
 var movements = ["f","b"];
 
-function entity(direction) {
+function Entity(direction) {
     this.cell = null;
     this.direction = directions.indexOf(direction);
+}
 
-    this.getLocation = function() {
+Entity.prototype.getLocation = function() {
         return {
-            "row" : this.cell.row.getIndex(),
+            "row" : this.cell.parentRow.getIndex(),
             "cell" : this.cell.getIndex(),
             "facing": directions[this.direction]
         };
-    };
+};
 
-    this.followInstructions = function(array) {
+Entity.prototype.followInstructions = function(array) {
+        var self = this;
         array.forEach(function(val){
             var inMovements = (movements.indexOf(val) !== -1);
             var inFacings = (facings.indexOf(val) !== -1);
             var handler = (inMovements) ? "move" : (inFacings) ? "turn" : "invalidDirection";
-            this[handler](val);
+            var location = self.getLocation();
+            self[handler](val, location);
         });
-    };
+};
 
-    this.move = function(direction) {
-        var g = this.cell.getLocation();
+Entity.prototype.move = function(direction, location) {
+        var g = this.cell.parentRow.parentGrid;
         this.cell.removeEntity(this);
-        var newLocation = this.computeRowAndCell(direction);
+        var newLocation = util.computeRowAndCell(direction, location);
         g.cellAt(newLocation.row, newLocation.cell).addEntity(this);
-    };
+};
 
-    this.computeRowAndCell = function(movement){
-        var row,cell;
-        var current = this.cell.getLocation();
-
-        if(this.direction === 0){
-            if(movement === "f"){
-                row = current.row - 1;
-                cell = current.cell;
-            }else{
-                row = current.row + 1;
-                cell = current.cell;
-            }
-        }else if(this.direction === 1){
-            if(movement === "f"){
-                row = current.row;
-                cell = current.cell + 1;
-            }else{
-                row = current.row;
-                cell = current.cell -1;
-            }
-        }else if(this.direction === 2){
-            if(movement === "f"){
-                row = current.row + 1;
-                cell = current.cell;
-            }else{
-                row = current.row - 1;
-                cell = current.cell;
-            }
-        }else if(this.direction === 3){
-            if(movement === "f"){
-                row = current.row;
-                cell = current.cell - 1;
-            }else {
-                row = current.row;
-                cell = current.cell + 1;
-            }
-        }
-
-        return {
-            row: row,
-            cell: cell
-        };
-    };
-
-    this.turn = function(direction) {
-        if(direction === "r" && this.direction !== (directions.length - 1)){
+Entity.prototype.turn = function(direction, location) {
+        if(direction === "r" && location.facing !== "W"){
             this.direction = this.direction + 1;
-        }else if(direction === "r" && this.direction === (directions.length - 1)){
+        }else if(direction === "r" && location.facing === "W"){
             this.direction = 0;
-        }else if(direction === "l" && this.direction !== 0){
+        }else if(direction === "l" && location.facing !== "N"){
             this.direction = this.direction - 1;
         }else{
             this.direction = directions.length - 1;
         }
-    };
+};
 
-    this.invalidDirection = function(val){
+Entity.prototype.invalidDirection = function(val){
         throw new Error("Invalid Direction " + val + " given");
-    }
-}
+};
 
-module.exports = entity;
+
+module.exports = Entity;

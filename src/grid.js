@@ -1,31 +1,30 @@
-var row = requires('./row');
+var row = require('./row');
 
-function grid(height, width) {
+function Grid(height, width) {
     this.rows = [];
-
-    this.cellAt = function(row, cell) {
-        return this.rows[row].cells[cell];
-    };
-
-    this.entitiesAt = function(row, cell) {
-        return this.cellAt(row, cell).entities;
-    };
-
-    this.addRow = function() {
-        var r = new row(this);
-        this.rows.push(r);
-        return r;
-    };
-
     //create the grid in the default size.
     if (height != null && width != null) {
         var i, j, r;
-        for (i = 0; i <= height; i++) {
+        for (i = 0; i < height; i++) {
             r = this.addRow();
-            for (j = 0; j <= width; j++)
+            for (j = 0; j < width; j++)
                 r.addCell();
         }
     }
 }
 
-module.exports = grid;
+Grid.prototype.entitiesAt = function(row, cell) {
+    return this.cellAt(row, cell).entities;
+};
+
+Grid.prototype.cellAt = function (row, cell) {
+    return this.rows[row].cells[cell];
+};
+
+Grid.prototype.addRow = function() {
+    var r = new row(this);
+    this.rows.push(r);
+    return r;
+};
+
+module.exports = Grid;
