@@ -33,14 +33,39 @@ function entity(direction) {
     this.computeRowAndCell = function(movement){
         var row,cell;
         var current = this.cell.getLocation();
-        if(movement === "f" && this.direction === 0){
 
-        }else if(movement === "f" && this.direction === 1){
-
-        }else if(movement === "f" && this.direction === 2){
-
-        }else if(movement === "f" && this.direction === 3){
-
+        if(this.direction === 0){
+            if(movement === "f"){
+                row = current.row - 1;
+                cell = current.cell;
+            }else{
+                row = current.row + 1;
+                cell = current.cell;
+            }
+        }else if(this.direction === 1){
+            if(movement === "f"){
+                row = current.row;
+                cell = current.cell + 1;
+            }else{
+                row = current.row;
+                cell = current.cell -1;
+            }
+        }else if(this.direction === 2){
+            if(movement === "f"){
+                row = current.row + 1;
+                cell = current.cell;
+            }else{
+                row = current.row - 1;
+                cell = current.cell;
+            }
+        }else if(this.direction === 3){
+            if(movement === "f"){
+                row = current.row;
+                cell = current.cell - 1;
+            }else {
+                row = current.row;
+                cell = current.cell + 1;
+            }
         }
 
         return {
