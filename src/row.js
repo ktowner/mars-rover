@@ -1,4 +1,4 @@
-var cell = require('./cell');
+var cell = requires('./cell');
 
 function row(parentGrid) {
     this.grid = parentGrid;

@@ -1,4 +1,4 @@
-var row = require('./row');
+var row = requires('./row');
 
 function grid(height, width) {
     this.rows = [];
